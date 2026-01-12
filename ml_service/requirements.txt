@@ -1,0 +1,19 @@
+# FastAPI and Web
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+python-multipart==0.0.9
+pydantic==2.6.1
+
+# NLP and ML
+spacy==3.7.4
+sentence-transformers==2.3.1
+scikit-learn==1.4.0
+numpy==1.26.4
+
+# Text Extraction
+PyPDF2==3.0.1
+pdfminer.six==20231228
+python-docx==1.1.0
+
+# Utilities
+python-dotenv==1.0.1

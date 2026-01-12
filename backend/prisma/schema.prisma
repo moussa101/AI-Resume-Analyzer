@@ -1,0 +1,60 @@
+// Prisma schema for AI Resume Analyzer
+// User, Resume, and Analysis models
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CANDIDATE
+  RECRUITER
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role      UserRole @default(CANDIDATE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resumes Resume[]
+}
+
+model Resume {
+  id         Int        @id @default(autoincrement())
+  userId     Int
+  filePath   String
+  fileName   String
+  fileSize   Int
+  parsedText String?    @db.Text
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analyses Analysis[]
+
+  @@index([userId])
+}
+
+model Analysis {
+  id            Int      @id @default(autoincrement())
+  resumeId      Int
+  jobDescText   String   @db.Text
+  matchScore    Float
+  skillsFound   String[]
+  missingSkills String[]
+  feedback      Json?
+  createdAt     DateTime @default(now())
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId])
+}
