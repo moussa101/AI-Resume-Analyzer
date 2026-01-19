@@ -42,31 +42,46 @@ export default function Dashboard() {
         setLoading(true);
         setError(null);
 
-        // Placeholder - would normally upload to backend
-        // Simulating analysis result for now
-        setTimeout(() => {
-            setResult({
-                score: 78.5,
-                suspicious: false,
-                security: {
-                    isSafe: true,
-                    flags: [],
-                    invisibleTextDetected: false,
-                },
-                skillsFound: ["Python", "JavaScript", "React", "SQL", "TypeScript"],
-                missingKeywords: ["Docker", "Kubernetes", "AWS", "CI/CD"],
-                feedback: {
-                    summary: "Strong technical candidate with room for cloud experience",
-                    suggestions: [
-                        "Add Docker/containerization experience",
-                        "Include cloud platform certifications",
-                        "Quantify achievements with metrics",
-                    ],
-                },
+        try {
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("job_description", jobDescription);
+
+            // Use analyze-file endpoint that handles PDF/DOCX extraction server-side
+            const mlResponse = await fetch("http://localhost:8000/analyze-file", {
+                method: "POST",
+                body: formData,
             });
+
+            if (!mlResponse.ok) {
+                const errorData = await mlResponse.json().catch(() => ({}));
+                throw new Error(errorData.detail || `Analysis failed: ${mlResponse.statusText}`);
+            }
+
+            const data = await mlResponse.json();
+
+            setResult({
+                score: data.score,
+                suspicious: data.suspicious || false,
+                suspiciousReason: data.suspicious_reason,
+                security: data.security ? {
+                    isSafe: data.security.is_safe,
+                    flags: data.security.flags || [],
+                    invisibleTextDetected: data.security.invisible_text_detected || false,
+                } : undefined,
+                skillsFound: data.skills_found || [],
+                missingKeywords: data.missing_keywords || [],
+                feedback: data.feedback,
+            });
+        } catch (err) {
+            console.error("Analysis error:", err);
+            setError(err instanceof Error ? err.message : "Analysis failed. Make sure the ML service is running.");
+        } finally {
             setLoading(false);
-        }, 2000);
+        }
     };
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
