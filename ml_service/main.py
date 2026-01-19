@@ -18,6 +18,15 @@ except ImportError:
     ResumeSecurityScanner = None
     wrap_for_llm = lambda x: x
 
+# ML Analyzer import
+try:
+    from analyzer import get_analyzer
+    ANALYZER_AVAILABLE = True
+except ImportError:
+    ANALYZER_AVAILABLE = False
+    get_analyzer = None
+
+
 app = FastAPI(
     title="AI Resume Analyzer - ML Service",
     description="ML service for resume parsing, NER extraction, and semantic similarity scoring with adversarial defense",
@@ -119,8 +128,23 @@ async def analyze_resume(request: AnalyzeRequest):
             metadata_mismatch=scan_result.get("metadata_mismatch", False),
         )
     
-    # Placeholder score - will be replaced with actual ML logic
-    score = 75.5
+    # Use real analyzer if available
+    if ANALYZER_AVAILABLE and get_analyzer is not None:
+        analyzer = get_analyzer()
+        result = analyzer.analyze(request.file_path, request.job_description)
+        score = result["score"]
+        skills_found = result["skills_found"]
+        missing_keywords = result["missing_keywords"]
+        feedback = result["feedback"]
+    else:
+        # Fallback to keyword-based scoring
+        score = 50.0
+        skills_found = ["Unable to analyze - dependencies not installed"]
+        missing_keywords = []
+        feedback = {
+            "summary": "Analysis requires sentence-transformers to be installed",
+            "suggestions": ["Run: pip install sentence-transformers"]
+        }
     
     # NFR-SEC-04: Anomaly Detection - flag suspiciously high scores
     suspicious = False
@@ -134,37 +158,9 @@ async def analyze_resume(request: AnalyzeRequest):
         suspicious=suspicious,
         suspicious_reason=suspicious_reason,
         security=security_info,
-        skills_found=["Python", "JavaScript", "React", "SQL"],
-        missing_keywords=["Docker", "Kubernetes", "AWS"],
-        contact_info={
-            "name": "Extracted Name",
-            "email": "email@example.com",
-            "phone": "+1234567890"
-        },
-        education=[
-            {
-                "degree": "Bachelor of Science",
-                "field": "Computer Science",
-                "institution": "University Name",
-                "year": "2020"
-            }
-        ],
-        experience=[
-            {
-                "title": "Software Engineer",
-                "company": "Tech Company",
-                "duration": "2 years",
-                "description": "Developed web applications"
-            }
-        ],
-        feedback={
-            "summary": "Good resume with room for improvement",
-            "suggestions": [
-                "Add more quantifiable achievements",
-                "Include Docker and cloud experience",
-                "Use more action verbs"
-            ]
-        }
+        skills_found=skills_found,
+        missing_keywords=missing_keywords,
+        feedback=feedback
     )
 
 
