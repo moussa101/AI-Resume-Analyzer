@@ -7,6 +7,43 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-brightgreen.svg)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+---
+
+## About
+
+**AI Resume Analyzer** is a comprehensive full-stack application designed to help job seekers optimize their resumes and increase their chances of landing interviews. Built with modern web technologies and powered by advanced natural language processing, it bridges the gap between candidate qualifications and employer requirements.
+
+### Why This Project Exists
+
+In today's competitive job market, many qualified candidates are filtered out by Applicant Tracking Systems (ATS) before their resumes ever reach human recruiters. AI Resume Analyzer solves this problem by:
+
+- **Analyzing semantic similarity** between your resume and target job descriptions
+- **Identifying skill gaps** that might cause rejection
+- **Providing actionable feedback** to improve resume effectiveness
+- **Detecting profile strengths** through GitHub integration
+- **Ensuring resume authenticity** with built-in security scanning
+
+### Who Is This For?
+
+- **Job Seekers**: Optimize your resume for specific roles and understand what recruiters are looking for
+- **Career Switchers**: Identify transferable skills and areas where you need to upskill
+- **Recruiters**: Quickly assess candidate-job fit with objective scoring metrics
+- **Students**: Learn what skills and keywords are valued in your target industry
+- **Developers**: Showcase your open-source contributions with integrated GitHub analysis
+
+### What Makes It Different?
+
+Unlike simple keyword matchers, AI Resume Analyzer uses:
+- **Semantic understanding** via Sentence Transformers to capture context and meaning
+- **Comprehensive skill databases** covering 100+ technologies and frameworks
+- **Profile enrichment** by extracting and analyzing GitHub developer profiles
+- **Security features** to detect resume manipulation attempts
+- **Full transparency** with detailed breakdowns of scoring methodology
+
+This is an **open-source**, **self-hosted** solution that gives you complete control over your data and privacy.
+
+---
+
 ## Overview
 
 AI Resume Analyzer helps job seekers optimize their resumes by comparing them against target job descriptions. Using semantic similarity algorithms and NLP techniques, it identifies skill gaps, suggests improvements, and provides a comprehensive match score to increase your chances of landing interviews.
@@ -21,6 +58,9 @@ AI Resume Analyzer helps job seekers optimize their resumes by comparing them ag
 
 ## Table of Contents
 
+- [Screenshots](#-screenshots)
+- [About](#about)
+- [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
@@ -34,6 +74,7 @@ AI Resume Analyzer helps job seekers optimize their resumes by comparing them ag
 - [Security Features](#security-features)
 - [Contributing](#contributing)
 - [Support](#support)
+- [Roadmap](#roadmap)
 - [License](#license)
 
 ## Features
@@ -219,6 +260,8 @@ AI-Resume-Analyzer/
 │       └── run_tests.py       # Automated test runner
 │
 ├── uploads/                    # Uploaded resume storage
+├── docs/                       # Documentation and images
+│   └── images/                # Screenshots and diagrams
 ├── docker-compose.yml          # Service orchestration
 ├── .env.example               # Environment template
 └── README.md
@@ -364,6 +407,8 @@ docker compose logs postgres-db
 - [ ] Resume template suggestions
 - [ ] Cover letter analysis
 - [ ] Batch processing for recruiters
+- [ ] Browser extension for one-click analysis
+- [ ] API rate limiting and authentication for public deployment
 
 ## License
 
