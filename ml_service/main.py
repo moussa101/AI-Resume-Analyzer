@@ -26,6 +26,14 @@ except ImportError:
     ANALYZER_AVAILABLE = False
     get_analyzer = None
 
+# Profile Analyzer import
+try:
+    from profile_analyzer import ProfileAnalyzer, ProfileAnalysisResult
+    PROFILE_ANALYZER_AVAILABLE = True
+except ImportError:
+    PROFILE_ANALYZER_AVAILABLE = False
+    ProfileAnalyzer = None
+
 
 app = FastAPI(
     title="AI Resume Analyzer - ML Service",
@@ -58,12 +66,35 @@ class SecurityInfo(BaseModel):
     metadata_mismatch: bool = False
 
 
+class GitHubProfileInfo(BaseModel):
+    username: str
+    name: Optional[str] = None
+    bio: Optional[str] = None
+    company: Optional[str] = None
+    location: Optional[str] = None
+    public_repos: int = 0
+    followers: int = 0
+    total_stars: int = 0
+    top_languages: List[str] = []
+    recent_commits: int = 0
+    notable_repos: List[Dict[str, Any]] = []
+
+
+class ProfileAnalysis(BaseModel):
+    github: Optional[GitHubProfileInfo] = None
+    linkedin_url: Optional[str] = None
+    profile_score: float = 0.0
+    profile_insights: List[str] = []
+    urls_found: Dict[str, Any] = {}
+
+
 class AnalyzeResponse(BaseModel):
     score: float
     suspicious: bool = False  # NFR-SEC-04: Flag high scores
     suspicious_reason: Optional[str] = None
     security: Optional[SecurityInfo] = None
     skills_found: List[str]
+    profile_analysis: Optional[ProfileAnalysis] = None  # NEW: GitHub/LinkedIn analysis
     missing_keywords: List[str]
     contact_info: Optional[dict] = None
     education: Optional[List[dict]] = None
@@ -289,6 +320,40 @@ async def analyze_file(file: UploadFile = File(...), job_description: str = Form
             missing_keywords = []
             feedback = {"summary": "Install dependencies", "suggestions": []}
         
+        # Profile analysis (GitHub/LinkedIn)
+        profile_analysis = None
+        if PROFILE_ANALYZER_AVAILABLE and ProfileAnalyzer is not None:
+            try:
+                profile_analyzer = ProfileAnalyzer()
+                profile_result = await profile_analyzer.analyze(text)
+                
+                github_info = None
+                if profile_result.github:
+                    github_info = GitHubProfileInfo(
+                        username=profile_result.github.username,
+                        name=profile_result.github.name,
+                        bio=profile_result.github.bio,
+                        company=profile_result.github.company,
+                        location=profile_result.github.location,
+                        public_repos=profile_result.github.public_repos,
+                        followers=profile_result.github.followers,
+                        total_stars=profile_result.github.total_stars,
+                        top_languages=profile_result.github.top_languages,
+                        recent_commits=profile_result.github.recent_commits,
+                        notable_repos=profile_result.github.notable_repos
+                    )
+                
+                profile_analysis = ProfileAnalysis(
+                    github=github_info,
+                    linkedin_url=profile_result.linkedin_url,
+                    profile_score=profile_result.profile_score,
+                    profile_insights=profile_result.profile_insights,
+                    urls_found=profile_result.urls_found
+                )
+            except Exception as e:
+                print(f"Profile analysis failed: {e}")
+                # Continue without profile analysis
+        
         # Anomaly detection
         suspicious = score >= 95.0
         suspicious_reason = "Score >= 95% indicates possible JD copy-paste." if suspicious else None
@@ -300,12 +365,65 @@ async def analyze_file(file: UploadFile = File(...), job_description: str = Form
             security=None,
             skills_found=skills_found[:10],
             missing_keywords=missing_keywords[:8],
-            feedback=feedback
+            feedback=feedback,
+            profile_analysis=profile_analysis
         )
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+# Standalone profile analysis endpoint
+@app.post("/analyze-profiles", response_model=ProfileAnalysis)
+async def analyze_profiles(github_url: Optional[str] = None, linkedin_url: Optional[str] = None, resume_text: Optional[str] = None):
+    """
+    Analyze GitHub/LinkedIn profiles directly.
+    Can pass URLs directly or resume text to extract URLs from.
+    """
+    if not PROFILE_ANALYZER_AVAILABLE or ProfileAnalyzer is None:
+        raise HTTPException(status_code=500, detail="Profile analyzer not available")
+    
+    profile_analyzer = ProfileAnalyzer()
+    
+    # If resume text provided, extract URLs from it
+    if resume_text:
+        profile_result = await profile_analyzer.analyze(resume_text)
+    else:
+        # Construct text with provided URLs
+        text_parts = []
+        if github_url:
+            text_parts.append(github_url)
+        if linkedin_url:
+            text_parts.append(linkedin_url)
+        
+        if not text_parts:
+            raise HTTPException(status_code=400, detail="Provide github_url, linkedin_url, or resume_text")
+        
+        profile_result = await profile_analyzer.analyze(" ".join(text_parts))
+    
+    github_info = None
+    if profile_result.github:
+        github_info = GitHubProfileInfo(
+            username=profile_result.github.username,
+            name=profile_result.github.name,
+            bio=profile_result.github.bio,
+            company=profile_result.github.company,
+            location=profile_result.github.location,
+            public_repos=profile_result.github.public_repos,
+            followers=profile_result.github.followers,
+            total_stars=profile_result.github.total_stars,
+            top_languages=profile_result.github.top_languages,
+            recent_commits=profile_result.github.recent_commits,
+            notable_repos=profile_result.github.notable_repos
+        )
+    
+    return ProfileAnalysis(
+        github=github_info,
+        linkedin_url=profile_result.linkedin_url,
+        profile_score=profile_result.profile_score,
+        profile_insights=profile_result.profile_insights,
+        urls_found=profile_result.urls_found
+    )
 
 
 if __name__ == "__main__":
