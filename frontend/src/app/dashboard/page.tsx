@@ -135,7 +135,7 @@ export default function Dashboard() {
             <nav className="w-full py-4 px-6 border-b border-[var(--gray-200)]">
                 <div className="max-w-6xl mx-auto flex justify-between items-center">
                     <Link href="/" className="text-[var(--foreground)] font-semibold text-lg tracking-tight">
-                        Resume Analyzer
+                        Skillora
                     </Link>
                     <span className="text-[var(--gray-400)] text-sm">Dashboard</span>
                 </div>

@@ -171,3 +171,89 @@ body {
   background: var(--gray-100);
   color: var(--gray-500);
 }
+
+/* Greeting scroll animation for homepage */
+@keyframes greeting-fade {
+
+  0%,
+  5% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  8%,
+  13% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  16%,
+  21% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  24%,
+  29% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  32%,
+  37% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  40%,
+  45% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  48%,
+  53% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  56%,
+  61% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  64%,
+  69% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  72%,
+  77% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  80%,
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  88%,
+  93% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  96%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-greeting-scroll {
+  animation: greeting-fade 24s ease-in-out infinite;
+}

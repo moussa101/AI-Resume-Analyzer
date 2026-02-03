@@ -9,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Resume Analyzer - AI-Powered Resume Analysis",
-  description: "Analyze your resume against job descriptions with ML-powered insights. Get intelligent feedback on skill matching and keyword gaps.",
-  keywords: ["resume", "analyzer", "AI", "machine learning", "job description", "NLP"],
+  title: "Skillora - AI-Powered Resume Analysis",
+  description: "Analyze your resume against job descriptions with ML-powered insights. Get intelligent feedback on skill matching, keyword gaps, and profile analysis.",
+  keywords: ["Skillora", "resume", "analyzer", "AI", "machine learning", "job description", "NLP", "skills"],
 };
 
 export default function RootLayout({

@@ -36,7 +36,7 @@ except ImportError:
 
 
 app = FastAPI(
-    title="AI Resume Analyzer - ML Service",
+    title="Skillora - ML Service",
     description="ML service for resume parsing, NER extraction, and semantic similarity scoring with adversarial defense",
     version="1.1.0"
 )

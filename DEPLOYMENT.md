@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide explains how to make your AI Resume Analyzer accessible to others on the internet, 24/7.
+This guide explains how to make your Skillora app accessible to others on the internet, 24/7.
 
 ## Option 1: Render (Best Free/Cheap Option)
 
