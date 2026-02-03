@@ -1,4 +1,4 @@
-# AI Resume Analyzer
+# Skillora
 
 > An intelligent, AI-powered platform that analyzes resumes against job descriptions using advanced NLP to provide match scoring, skill extraction, and actionable feedback.
 
@@ -11,11 +11,11 @@
 
 ## About
 
-**AI Resume Analyzer** is a comprehensive full-stack application designed to help job seekers optimize their resumes and increase their chances of landing interviews. Built with modern web technologies and powered by advanced natural language processing, it bridges the gap between candidate qualifications and employer requirements.
+**Skillora** is a comprehensive full-stack application designed to help job seekers optimize their resumes and increase their chances of landing interviews. Built with modern web technologies and powered by advanced natural language processing, it bridges the gap between candidate qualifications and employer requirements.
 
 ### Why This Project Exists
 
-In today's competitive job market, many qualified candidates are filtered out by Applicant Tracking Systems (ATS) before their resumes ever reach human recruiters. AI Resume Analyzer solves this problem by:
+In today's competitive job market, many qualified candidates are filtered out by Applicant Tracking Systems (ATS) before their resumes ever reach human recruiters. Skillora solves this problem by:
 
 - **Analyzing semantic similarity** between your resume and target job descriptions
 - **Identifying skill gaps** that might cause rejection
@@ -33,7 +33,7 @@ In today's competitive job market, many qualified candidates are filtered out by
 
 ### What Makes It Different?
 
-Unlike simple keyword matchers, AI Resume Analyzer uses:
+Unlike simple keyword matchers, Skillora uses:
 - **Semantic understanding** via Sentence Transformers to capture context and meaning
 - **Comprehensive skill databases** covering 100+ technologies and frameworks
 - **Profile enrichment** by extracting and analyzing GitHub developer profiles
@@ -46,7 +46,7 @@ This is an **open-source**, **self-hosted** solution that gives you complete con
 
 ## Overview
 
-AI Resume Analyzer helps job seekers optimize their resumes by comparing them against target job descriptions. Using semantic similarity algorithms and NLP techniques, it identifies skill gaps, suggests improvements, and provides a comprehensive match score to increase your chances of landing interviews.
+Skillora helps job seekers optimize their resumes by comparing them against target job descriptions. Using semantic similarity algorithms and NLP techniques, it identifies skill gaps, suggests improvements, and provides a comprehensive match score to increase your chances of landing interviews.
 
 **Key capabilities:**
 - 🎯 **Smart Matching** - Semantic similarity scoring using spaCy and Sentence Transformers
