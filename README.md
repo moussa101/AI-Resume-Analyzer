@@ -53,7 +53,10 @@ Skillora helps job seekers optimize their resumes by comparing them against targ
 - 🔍 **Skill Detection** - Automatic extraction of technical skills, languages, and tools
 - 📊 **GitHub Profile Analysis** - Evaluates developer profiles with repo stats, activity, and scoring
 - 🛡️ **Security Scanning** - Detects resume manipulation attempts (invisible text, homoglyphs)
-- 📝 **Multi-Format Support** - PDF, DOCX, and TXT file uploads
+- 📝 **Multi-Format Support** - PDF, DOCX, TXT, RTF, and HTML file uploads
+- 🔐 **Authentication** - OAuth (GitHub, Google, Apple), email verification, password reset
+- 📧 **Email System** - Automated verification and password reset emails
+- 🛡️ **Upload Security** - File size limits, MIME validation, filename sanitization
 - 💡 **Actionable Feedback** - Detailed suggestions to improve resume-job alignment
 
 ## Table of Contents
@@ -102,19 +105,35 @@ Skillora helps job seekers optimize their resumes by comparing them against targ
   - Flags suspiciously high matches that indicate copy-pasting
 
 - **Modern User Interface**
-  - Clean, responsive design inspired by modern web standards
+  - Clean, responsive design inspired by Apple's design language
+  - Animated multilingual greeting (Hello in 12 languages)
   - Drag-and-drop file upload
   - Real-time analysis results with interactive visualizations
+
+- **Authentication & User Management**
+  - Email/password registration with strong password requirements
+  - OAuth login with GitHub, Google, and Apple
+  - Email verification for new accounts
+  - Password reset via email
+  - JWT-based session management
+
+- **File Upload Security**
+  - 10MB file size limit (DoS prevention)
+  - MIME type validation (prevents extension spoofing)
+  - Filename sanitization (path traversal protection)
+  - Rate limiting (abuse prevention)
 
 ## Tech Stack
 
 | Layer | Technologies |
 |-------|-------------|
-| **Frontend** | Next.js 16, React 19, TypeScript, Tailwind CSS 4 |
-| **Backend API** | NestJS 11, TypeScript, PostgreSQL, Prisma ORM |
-| **ML Service** | FastAPI, Python 3.9+, spaCy 3.7, Sentence-Transformers |
+| **Frontend** | Next.js 15, React 19, TypeScript, Tailwind CSS 4 |
+| **Backend API** | NestJS 11, TypeScript, PostgreSQL, Prisma ORM 7 |
+| **ML Service** | FastAPI, Python 3.11+, spaCy 3.7, Sentence-Transformers |
+| **Authentication** | JWT, Passport.js, OAuth 2.0 (GitHub, Google, Apple) |
+| **Email** | Nodemailer, Gmail SMTP |
 | **Infrastructure** | Docker, Docker Compose, PostgreSQL 15 |
-| **Security** | JWT Authentication, PyMuPDF (PDF scanning), bcrypt |
+| **Security** | bcrypt, python-magic (MIME validation), slowapi (rate limiting) |
 
 ## Getting Started
 
@@ -350,6 +369,18 @@ The analyzer includes built-in protection against common resume manipulation tec
 
 **Note**: Security features are informational and help recruiters identify potentially manipulated resumes.
 
+### File Upload Security
+
+The ML service includes comprehensive file upload protection:
+
+| Feature | Description | Default |
+|---------|-------------|--------|
+| **File Size Limit** | Maximum upload size to prevent DoS | 10MB |
+| **MIME Validation** | Verifies file content matches extension | Enabled |
+| **Filename Sanitization** | Removes path traversal characters | Enabled |
+| **Extension Whitelist** | Only allows safe file types | PDF, DOCX, TXT, RTF, HTML |
+| **Rate Limiting** | Limits requests per IP | Configurable |
+
 ## Contributing
 
 Contributions are welcome! Here's how you can help:
@@ -401,14 +432,18 @@ docker compose logs postgres-db
 
 ## Roadmap
 
-- [ ] Support for more file formats (RTF, HTML)
+- [x] Support for more file formats (RTF, HTML)
+- [x] OAuth authentication (GitHub, Google, Apple)
+- [x] Email verification system
+- [x] Password reset functionality
+- [x] File upload security (size limits, MIME validation)
 - [ ] Multi-language resume analysis
 - [ ] ATS (Applicant Tracking System) compatibility scoring
 - [ ] Resume template suggestions
 - [ ] Cover letter analysis
 - [ ] Batch processing for recruiters
 - [ ] Browser extension for one-click analysis
-- [ ] API rate limiting and authentication for public deployment
+- [ ] Stripe subscription integration
 
 ## License
 
